@@ -36,3 +36,10 @@ async def get_market(market_id: int, db: Session = Depends(get_db)):
         )
     
     return market
+
+
+@router.get("/")
+async def get_markets(db: Session = Depends(get_db)):
+    markets = db.query(Market).filter(Market.status == "open").all()
+
+    return markets

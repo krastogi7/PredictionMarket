@@ -162,62 +162,12 @@
   overflow: hidden;
 }
 
-.table-row {
-  display: grid;
-  grid-template-columns: 2.4fr 0.8fr 0.8fr 0.8fr 0.8fr;
-  align-items: center;
-  padding: 22px 26px;
-  border-bottom: 1px solid #e6e8f0;
-  font-size: 16.5px;
-}
-
-.table-row:last-child {
-  border-bottom: none;
-}
 
 .table-head,
 .market-head {
   background: #fafbfe;
   color: #4b505e;
   font-weight: 800;
-}
-
-.yes-badge,
-.no-badge,
-.open-badge,
-.won-badge,
-.closed-badge,
-.category-badge {
-  width: fit-content;
-  padding: 8px 15px;
-  border-radius: 10px;
-  font-weight: 800;
-  font-size: 14px;
-}
-
-.yes-badge {
-  background: #e4f6e9;
-  color: #16863b;
-}
-
-.no-badge {
-  background: #f9e2e4;
-  color: #b32834;
-}
-
-.open-badge {
-  background: #fff0cc;
-  color: #8a6200;
-}
-
-.won-badge {
-  background: #dff5e7;
-  color: #12823a;
-}
-
-.closed-badge {
-  background: #eceef3;
-  color: #555b6b;
 }
 
 .category-badge {

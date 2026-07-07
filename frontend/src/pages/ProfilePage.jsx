@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import "./ProfilePage.css";
-import { apiGetMe } from "../api/api";
+import { apiGetMe, apiGetMyBets } from "../api/api";
 import { useNavigate } from "react-router-dom";
+import BetRow from "../components/BetRow";
 
 function ProfilePage() {
     const navigate = useNavigate()
     const [me, setMe] = useState({})
+    const [bets, setBets] = useState([])
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
@@ -14,13 +16,15 @@ function ProfilePage() {
             try {
                 const data = await apiGetMe()
                 setMe(data)
-                console.log("hi")
-                console.log(data)
+
+                const betData = await apiGetMyBets()
+                setBets(betData)
+
             }
 
             catch (err) {
-                console.log(err)
-                // navigate("/login")
+                localStorage.removeItem("token")
+                navigate("/login")
             }
 
             finally {
@@ -62,8 +66,6 @@ function ProfilePage() {
 
                 <section className="profile-card compact">
                     <div className="profile-user">
-                        <div className="profile-avatar">FM</div>
-
                         <div>
                             <h2>{me.name}</h2>
                             <p>{me.email}</p>
@@ -95,29 +97,10 @@ function ProfilePage() {
                             <span>Status</span>
                         </div>
 
-                        <div className="table-row">
-                            <span>Will Bitcoin reach $100k by Dec 31?</span>
-                            <span className="yes-badge">Yes</span>
-                            <span>$50.00</span>
-                            <span>0.65</span>
-                            <span className="open-badge">Open</span>
-                        </div>
-
-                        <div className="table-row">
-                            <span>Will New York win its next home game?</span>
-                            <span className="no-badge">No</span>
-                            <span>$75.00</span>
-                            <span>0.40</span>
-                            <span className="open-badge">Open</span>
-                        </div>
-
-                        <div className="table-row">
-                            <span>Will interest rates drop this summer?</span>
-                            <span className="yes-badge">Yes</span>
-                            <span>$100.00</span>
-                            <span>0.55</span>
-                            <span className="won-badge">Won</span>
-                        </div>
+                        {/* Populates the bets table with the rows */}
+                        {bets.map((bet) => (
+                            <BetRow status={bet.status} amount={bet.amount} price={bet.price}
+                                    position={bet.position} marketId={bet.market_id}/>))}
                     </div>
                 </section>
 

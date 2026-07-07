@@ -25,4 +25,10 @@ class MarketCreateRequest(BaseModel):
     question: str
     description: str
     close_date: datetime
+
+class BetCreateRequest(BaseModel):
+    market_id: int
+    position: str
+    amount: float
+    price: float
     

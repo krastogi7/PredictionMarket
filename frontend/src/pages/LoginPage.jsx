@@ -68,7 +68,7 @@ export default function LoginPage() {
                         <label>Password</label>
                         <input
                             name="password"
-                            type="text"
+                            type="password"
                             placeholder="Enter your password"
                             value={form.password}
                             onChange={handleChange}

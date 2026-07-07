@@ -62,8 +62,6 @@ def get_current_user(
         
         user_id = payload["sub"] # gets the users id from the decoded JWT
 
-        
-
         if user_id is None:
             raise credential_exception
 

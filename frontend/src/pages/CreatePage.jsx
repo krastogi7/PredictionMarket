@@ -20,6 +20,7 @@ function CreatePage() {
 
         try {
             await apiCreateMarket(question, description, closeDate)
+            navigate("/browse")
         }
 
         catch (err) {

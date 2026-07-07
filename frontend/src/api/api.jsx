@@ -51,6 +51,8 @@ export async function apiGetMe() {
     return handleResponse(res)
 }
 
+// Markets
+
 export async function apiCreateMarket(question, description, closeDate) {
     const res = await fetch(`${BASE}/markets`, {
         method: "POST", 
@@ -61,10 +63,42 @@ export async function apiCreateMarket(question, description, closeDate) {
     return handleResponse(res)
 }
 
-export async function getMarkets() {
+export async function apiGetMarkets() {
+    const res = await fetch(`${BASE}/markets`, {
+        method: "GET", 
+        headers: {"Content-Type": "application/json"}
+    })
 
+    return handleResponse(res)
 }
 
-export async function getMarket(marketID) {
-    
+export async function apiGetMarket(marketID) {
+    const res = await fetch(`${BASE}/markets/${marketID}`, {
+        method: "GET", 
+        headers: {"Content-Type": "application/json"}
+    })
+
+    return handleResponse(res)
+}
+
+// BETS
+
+export async function apiGetMyBets() {
+    const res = await fetch(`${BASE}/bets`, {
+        method: "GET", 
+        headers: {...authHeaders(), "Content-Type": "application/json"}
+    })
+
+    return handleResponse(res)
+}
+
+// price -> the price of the position. Ex: 24 for 24% yes or 56 for 56% no
+export async function apiCreateBet(marketId, amount, position, price) {
+    const res = await fetch(`${BASE}/bets`, {
+        method: "POST", 
+        headers: {...authHeaders(), "Content-Type": "application/json"},
+        body: JSON.stringify({market_id: marketId, amount: amount, position: position, price: price})
+    })
+
+    return handleResponse(res)
 }

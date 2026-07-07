@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage'
 import BrowsePage from './pages/BrowsePage'
 import ProfilePage from './pages/ProfilePage'
 import CreatePage from './pages/CreatePage'
+import MarketPage from './pages/MarketPage'
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />}></Route>
         <Route path="/browse" element={<BrowsePage />}></Route>
         <Route path="/profile" element={<ProfilePage />}></Route>
-        <Route path="create" element={<CreatePage />}></Route>
+        <Route path="/create" element={<CreatePage />}></Route>
+        <Route path="/browse/:marketId" element={<MarketPage />}></Route>
         
       </Routes>
     </BrowserRouter>

@@ -18,13 +18,16 @@ export default function BetRow({marketId, status, position, amount, price}) {
 
         loadMarket()
     }, [])
+
+    const statusBadgeClass = status === "won" ? "won-badge" : status === "lost" ? "lost-badge" : "open-badge"
+
     return (
         <div className="table-row">
             <span>{market.question}</span>
-            <span className="yes-badge">{position}</span>
+            <span className={position === "yes" ? "yes-badge" : "no-badge"}>{position}</span>
             <span>${amount}</span>
-            <span>{price / 100}</span>
-            <span className="open-badge">{status}</span>
+            <span>{(price / 100).toFixed(2)}</span>
+            <span className={statusBadgeClass}>{status}</span>
         </div>
     )
 }

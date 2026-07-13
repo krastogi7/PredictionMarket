@@ -74,8 +74,28 @@ export async function apiGetMarkets() {
 
 export async function apiGetMarket(marketID) {
     const res = await fetch(`${BASE}/markets/${marketID}`, {
-        method: "GET", 
+        method: "GET",
         headers: {"Content-Type": "application/json"}
+    })
+
+    return handleResponse(res)
+}
+
+export async function apiGetMyMarkets() {
+    const res = await fetch(`${BASE}/markets/mine`, {
+        method: "GET",
+        headers: {...authHeaders(), "Content-Type": "application/json"}
+    })
+
+    return handleResponse(res)
+}
+
+// outcome -> "yes" or "no"
+export async function apiResolveMarket(marketId, outcome) {
+    const res = await fetch(`${BASE}/markets/${marketId}/resolve`, {
+        method: "POST",
+        headers: {...authHeaders(), "Content-Type": "application/json"},
+        body: JSON.stringify({outcome: outcome})
     })
 
     return handleResponse(res)
@@ -92,12 +112,12 @@ export async function apiGetMyBets() {
     return handleResponse(res)
 }
 
-// price -> the price of the position. Ex: 24 for 24% yes or 56 for 56% no
-export async function apiCreateBet(marketId, amount, position, price) {
+// price is locked in server-side from the market's live odds, not sent by the client
+export async function apiCreateBet(marketId, amount, position) {
     const res = await fetch(`${BASE}/bets`, {
-        method: "POST", 
+        method: "POST",
         headers: {...authHeaders(), "Content-Type": "application/json"},
-        body: JSON.stringify({market_id: marketId, amount: amount, position: position, price: price})
+        body: JSON.stringify({market_id: marketId, amount: amount, position: position})
     })
 
     return handleResponse(res)

@@ -43,16 +43,6 @@ function BrowsePage() {
         <button className="create-market-btn" onClick={() => navigate("/create")}>Create Market</button>
       </div>
 
-
-      <div className="browse-controls">
-        <div className="search-box">
-          <span>🔍</span>
-          <input placeholder="Search markets..." />
-        </div>
-
-
-      </div>
-
       <div className="markets-grid">
 
         {markets != null ?

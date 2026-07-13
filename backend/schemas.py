@@ -30,5 +30,6 @@ class BetCreateRequest(BaseModel):
     market_id: int
     position: str
     amount: float
-    price: float
-    
+
+class MarketResolveRequest(BaseModel):
+    outcome: str

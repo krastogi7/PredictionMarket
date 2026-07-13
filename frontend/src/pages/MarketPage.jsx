@@ -1,19 +1,18 @@
 import { useNavigate, useParams } from "react-router-dom";
 import "./MarketPage.css";
 import { useEffect, useState } from "react";
-import { apiCreateBet, apiGetMarket, apiGetMe } from "../api/api";
+import { apiCreateBet, apiGetMarket, apiGetMe, apiResolveMarket } from "../api/api";
 
 function MarketPage() {
     const { marketId } = useParams()
     const [market, setMarket] = useState({})
     const [loading, setLoading] = useState(false)
+    const [resolving, setResolving] = useState(false)
     const [me, setMe] = useState({})
     const [betAmount, setBetAmount] = useState(50)
     const [yesSelected, setYesSelected] = useState(true)
-    const [potentialProfit, setPotentialProfit] = useState(0)
 
     const navigate = useNavigate()
-    
 
     useEffect(() => {
         async function initializeMarket() {
@@ -41,12 +40,14 @@ function MarketPage() {
         initializeMe()
     }, [])
 
-    // changes the bet amount box to update the local variable
+    // price (0-100) of the currently selected outcome, and what a bet at that price would pay out if it wins
+    const price = yesSelected ? market.odds_yes : 100 - market.odds_yes
+    const potentialPayout = price > 0 ? (betAmount / price) * 100 : 0
+    const potentialProfit = potentialPayout - betAmount
+
     function handleChange(e) {
         e.preventDefault()
         setBetAmount(e.target.value)
-        const odds = (yesSelected ? market.odds_yes : 100 - market.odds_yes) / 100
-        setPotentialProfit(odds * e.target.value)
     }
 
     async function createBet() {
@@ -54,15 +55,13 @@ function MarketPage() {
 
         // checks that the bet amount is a valid number before calling the api
         if (me.balance < betAmount || betAmount <= 0) {
-            // SET ERROR LATER
             return
         }
 
         try {
             const position = yesSelected ? "yes" : "no"
-            const price = yesSelected ? market.odds_yes : 100 - market.odds_yes
 
-            await apiCreateBet(marketId, betAmount, position, price)
+            await apiCreateBet(marketId, betAmount, position)
             navigate("/profile")
         }
 
@@ -72,6 +71,23 @@ function MarketPage() {
 
         finally {
             setLoading(false)
+        }
+    }
+
+    async function resolveMarket(outcome) {
+        setResolving(true)
+
+        try {
+            const data = await apiResolveMarket(marketId, outcome)
+            setMarket(data)
+        }
+
+        catch (err) {
+            console.log(err)
+        }
+
+        finally {
+            setResolving(false)
         }
     }
 
@@ -113,14 +129,14 @@ function MarketPage() {
                         <div className="odds-section">
                             <div className="odds-box">
                                 <p>Yes</p>
-                                <h3>{market.odds_yes}%</h3>
+                                <h3>{Math.round(market.odds_yes)}%</h3>
                             </div>
 
                             <div className="odds-divider"></div>
 
                             <div className="odds-box">
                                 <p>No</p>
-                                <h3>{100 - market.odds_yes}%</h3>
+                                <h3>{Math.round(100 - market.odds_yes)}%</h3>
                             </div>
                         </div>
 
@@ -132,8 +148,7 @@ function MarketPage() {
                     <div className="market-card">
                         <h2>Market Description</h2>
                         <p className="description-text">
-                            This market resolves to “Yes” if Team A wins the NBA Finals in
-                            the 2023–24 season. Otherwise, it resolves to “No”.
+                            {market.desc}
                         </p>
 
                         <div className="market-info-list">
@@ -150,6 +165,7 @@ function MarketPage() {
                     </div>
                 </div>
 
+                {market.status === "open" ?
                 <div className="bet-card">
                     <h2>Place Your Bet</h2>
 
@@ -157,16 +173,16 @@ function MarketPage() {
                         <label>Choose Outcome</label>
 
                         <div className="outcome-buttons">
-                            <button 
+                            <button
                                 className={yesSelected ? "outcome-button selected" : "outcome-button"}
                                 onClick={() => setYesSelected(true)}>
-                                Yes <span>{market.odds_yes}¢</span>
+                                Yes <span>{Math.round(market.odds_yes)}¢</span>
                             </button>
 
-                            <button 
+                            <button
                                 className={yesSelected ? "outcome-button" : "outcome-button selected"}
                                 onClick={() => setYesSelected(false)}>
-                                No <span>{100 - market.odds_yes}¢</span>
+                                No <span>{Math.round(100 - market.odds_yes)}¢</span>
                             </button>
                         </div>
                     </div>
@@ -176,7 +192,7 @@ function MarketPage() {
 
                         <div className="amount-input-wrapper">
                             <span>$</span>
-                            <input 
+                            <input
                                 type="number"
                                 value={betAmount}
                                 onChange={handleChange}
@@ -189,9 +205,9 @@ function MarketPage() {
                     </div>
 
                     <div className="return-box">
-                        <p>If this market resolves Yes, you will receive</p>
-                        <h3>${potentialProfit}</h3>
-                        <span>{betAmount > 0 ? potentialProfit / betAmount * 100: 0}% potential profit</span>
+                        <p>If this resolves {yesSelected ? "Yes" : "No"}, you will receive</p>
+                        <h3>${potentialPayout.toFixed(2)}</h3>
+                        <span>+{Math.round(betAmount > 0 ? potentialProfit / betAmount * 100: 0)}% potential profit</span>
                     </div>
 
                     <button className="confirm-button" onClick={() => createBet()}>
@@ -205,7 +221,30 @@ function MarketPage() {
                             <p>All bets are held until the market resolves.</p>
                         </div>
                     </div>
+
+                    {market.creator_id === me.id &&
+                    <div className="resolve-box">
+                        <strong>You created this market</strong>
+                        <p>Once the outcome is known, resolve it to pay out winning bets.</p>
+
+                        <div className="resolve-buttons">
+                            <button className="resolve-yes-btn" disabled={resolving} onClick={() => resolveMarket("yes")}>
+                                Resolve Yes
+                            </button>
+                            <button className="resolve-no-btn" disabled={resolving} onClick={() => resolveMarket("no")}>
+                                Resolve No
+                            </button>
+                        </div>
+                    </div>}
                 </div>
+                :
+                <div className="bet-card">
+                    <h2>Market Resolved</h2>
+                    <div className="resolved-outcome">
+                        This market resolved <strong>{market.outcome === "yes" ? "Yes" : "No"}</strong>. Winning bets have been paid out.
+                    </div>
+                </div>
+                }
             </div>
         </div>
     );

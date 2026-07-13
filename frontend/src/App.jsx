@@ -9,6 +9,7 @@ import BrowsePage from './pages/BrowsePage'
 import ProfilePage from './pages/ProfilePage'
 import CreatePage from './pages/CreatePage'
 import MarketPage from './pages/MarketPage'
+import MyMarketPage from './pages/MyMarketPage'
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
         <Route path="/profile" element={<ProfilePage />}></Route>
         <Route path="/create" element={<CreatePage />}></Route>
         <Route path="/browse/:marketId" element={<MarketPage />}></Route>
-        
+        <Route path="/markets" element={<MyMarketPage />}></Route>
+
       </Routes>
     </BrowserRouter>
     

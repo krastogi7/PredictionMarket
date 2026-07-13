@@ -25,7 +25,8 @@ class Market(Base):
     odds_yes = Column(Float, default=50)
     yes_pool = Column(Float, default=50)
     no_pool = Column(Float, default=50)
-    status = Column(String, default="open") # opened/closed
+    status = Column(String, default="open") # open/closed
+    outcome = Column(String, nullable=True) # yes/no, set once resolved
     end_time = Column(Date, nullable=False)
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
@@ -37,7 +38,8 @@ class Bet(Base):
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     market_id = Column(Integer, ForeignKey("markets.id"), nullable=False)
     amount = Column(Float, nullable=False)
-    price = Column(Float, nullable=False)
+    price = Column(Float, nullable=False) # price (0-100) locked in at bet time
+    shares = Column(Float, nullable=False, default=0) # amount / (price/100); pays $1 each if this position wins
     position = Column(String, nullable=False) # yes/no
     created_time = Column(DateTime(timezone=True), server_default=func.now())
-    status = Column(String, nullable=False, default="open")
+    status = Column(String, nullable=False, default="open") # open/won/lost

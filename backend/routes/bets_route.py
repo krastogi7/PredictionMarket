@@ -45,14 +45,23 @@ def create_bet(data: BetCreateRequest, db: Session = Depends(get_db), user: User
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Position must be yes or no"
         )
-   
+    if data.amount > user.balance:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Insufficient balance"
+        )
+
+    # locks in the price from the market's current odds (never trust a client-supplied price)
+    price = market.odds_yes if data.position == "yes" else 100 - market.odds_yes
+    shares = data.amount / (price / 100)
 
     # creates new row to be added to database
     new_bet = Bet (
         owner_id = user.id,
         market_id = data.market_id,
         amount=data.amount,
-        price = data.price,
+        price = price,
+        shares = shares,
         position = data.position
     )
 

@@ -17,12 +17,12 @@ export default function MarketCard({description, question, yesPercent, marketId,
             <div className="market-outcomes">
                 <div>
                     <span>Yes</span>
-                    <strong>{yesPercent}%</strong>
+                    <strong>{Math.round(yesPercent)}%</strong>
                 </div>
 
                 <div>
                     <span>No</span>
-                    <strong>{100 - yesPercent}%</strong>
+                    <strong>{Math.round(100 - yesPercent)}%</strong>
                 </div>
             </div>
 

@@ -1,0 +1,105 @@
+.my-market-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+
+  padding: 24px;
+  cursor: pointer;
+
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+  transition: all 0.2s ease;
+}
+
+.my-market-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 55px rgba(15, 23, 42, 0.1);
+}
+
+.my-market-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.status-pill {
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+.open-pill {
+  color: #16a34a;
+  background: #dcfce7;
+}
+
+.closed-pill {
+  color: #6b7280;
+  background: #f3f4f6;
+}
+
+.my-market-card h2 {
+  font-size: 1.35rem;
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+  margin: 0 0 12px;
+}
+
+.my-market-card .market-description {
+  color: #6b7280;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin: 0 0 20px;
+}
+
+.my-market-card .market-outcomes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.my-market-card .market-outcomes div {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.my-market-card .market-outcomes span {
+  display: block;
+  color: #6b7280;
+  font-size: 0.82rem;
+  font-weight: 800;
+  margin-bottom: 5px;
+}
+
+.my-market-card .market-outcomes strong {
+  font-size: 1.45rem;
+  letter-spacing: -0.04em;
+}
+
+.my-market-card .probability-bar {
+  height: 11px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.my-market-card .probability-fill {
+  height: 100%;
+  background: #2563eb;
+  border-radius: 999px;
+}
+
+.my-market-card .market-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
